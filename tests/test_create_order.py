@@ -2,15 +2,8 @@ import allure
 import pytest
 import requests
 from ..data import *
-
-BASE_URL = 'https://qa-scooter.praktikum-services.ru'
-
-def cancel_order(track):
-
-    requests.put(
-        f'{BASE_URL}/api/v1/orders/cancel',
-        json={"track": track}
-    )
+from ..urls import Urls
+from ..helpers import *
 
 @allure.feature('Создание заказа')
 class TestCreateOrder:
@@ -19,7 +12,7 @@ class TestCreateOrder:
     @pytest.mark.parametrize('color', ['BLACK', 'GREY'])
     def test_create_order_black_or_grey_color(self, color):
         order_data = generate_order_data(color)
-        response = requests.post(f'{BASE_URL}/api/v1/orders', json=order_data)
+        response = requests.post(f'{Urls.BASE_URL+Urls.ORDERS}', json=order_data)
         
         assert response.status_code == 201
         assert 'track' in response.json()
@@ -30,7 +23,7 @@ class TestCreateOrder:
     @allure.title('Проверка, что можно указать оба цвета')
     def test_create_order_both_colors(self):
         order_data = generate_order_data(['BLACK', 'GREY'])
-        response = requests.post(f'{BASE_URL}/api/v1/orders', json=order_data)
+        response = requests.post(f'{Urls.BASE_URL+Urls.ORDERS}', json=order_data)
         
         assert response.status_code == 201
         assert 'track' in response.json()
@@ -44,7 +37,7 @@ class TestCreateOrder:
         if 'color' in order_data:
             del order_data['color']
         
-        response = requests.post(f'{BASE_URL}/api/v1/orders', json=order_data)
+        response = requests.post(f'{Urls.BASE_URL+Urls.ORDERS}', json=order_data)
         
         assert response.status_code == 201
         assert 'track' in response.json()
@@ -55,7 +48,7 @@ class TestCreateOrder:
     @allure.title('Проверка, что тело ответа содержит track')
     def test_create_order_returns_track(self):
         order_data = generate_order_data(['BLACK'])
-        response = requests.post(f'{BASE_URL}/api/v1/orders', json=order_data)
+        response = requests.post(f'{Urls.BASE_URL+Urls.ORDERS}', json=order_data)
         
         assert response.status_code == 201
         response_json = response.json()
