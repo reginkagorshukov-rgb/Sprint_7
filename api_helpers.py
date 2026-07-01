@@ -37,3 +37,11 @@ def delete_courier_by_id(courier_id):
         requests.delete(f'{Urls.BASE_URL+Urls.COURIER}/{courier_id}')
         return True
     return False
+
+@allure.step('Отмена заказа по треку track')
+def cancel_order(track):
+    response = requests.put(
+        f'{Urls.BASE_URL+Urls.CANCEL}',
+        json={"track": track}
+    )
+    return response

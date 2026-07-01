@@ -11,13 +11,26 @@ class TestCreateCourier:
     
     @allure.title('Проверка, что можно создать курьера')
     def test_create_courier_success(self, created_courier):
-        
+        login, password, first_name = generate_courier_data()
+        payload = {
+            "login": login,
+            "password": password,
+            "firstName": first_name
+        }
+        response = requests.post(f'{Urls.BASE_URL+Urls.COURIER}', data=payload)
+        assert response.status_code == 201
+        assert response.json() == {'ok': True}
+
         auth_response = requests.post(
-            f'{Urls.BASE_URL+Urls.LOGIN}',
-            data={"login": created_courier['login'], "password": created_courier['password']}
-        )
+        f'{Urls.BASE_URL+Urls.LOGIN}',
+        data={"login": login, "password": password}
+    )
         assert auth_response.status_code == 200
-    
+        auth_json = auth_response.json()
+        assert 'id' in auth_json
+        courier_id = auth_json['id']
+        delete_courier_by_id(courier_id)
+
     @allure.title('Проверка, что нельзя создать двух одинаковых курьеров')
     def test_create_duplicate_courier(self, created_courier):
         payload = {

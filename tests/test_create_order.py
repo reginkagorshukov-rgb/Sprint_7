@@ -4,6 +4,7 @@ import requests
 from ..data import *
 from ..urls import Urls
 from ..helpers import *
+from ..api_helpers import *
 
 @allure.feature('Создание заказа')
 class TestCreateOrder:

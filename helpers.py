@@ -16,14 +16,6 @@ def generate_courier_data():
     first_name = generate_random_string(10)
     return login, password, first_name
 
-@allure.step('Отмена заказа по треку track')
-def cancel_order(track):
-    response = requests.put(
-        f'{Urls.BASE_URL+Urls.CANCEL}',
-        json={"track": track}
-    )
-    return response
-
 @allure.step('Генерация данных заказа')
 def generate_order_data(color=None):
     first_names = ["Алексей", "Мария", "Иван", "Елена", "Дмитрий"]
